@@ -43,10 +43,11 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -210,56 +211,56 @@ app.get('/api/current-user', (req, res) => {
   }
 });
 
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['email', 'profile'] })
-);
+// app.get('/auth/google',
+//   passport.authenticate('google', { scope: ['email', 'profile'] })
+// );
 
-app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
+// app.get('/logout', (req, res) => {
+//   req.logout();
+//   res.redirect('/');
+// });
 
-app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    const userEmail = req.user.user.email;
-    if (req.user.isNewUser) {
-      res.redirect(`http://localhost:3000?email=${encodeURIComponent(userEmail)}`);
-    } else  {
-      res.redirect(`http://localhost:3000?email=${encodeURIComponent(userEmail)}`);
+// app.get('/auth/google/callback', 
+//   passport.authenticate('google', { failureRedirect: '/login' }),
+//   (req, res) => {
+//     const userEmail = req.user.user.email;
+//     if (req.user.isNewUser) {
+//       res.redirect(`http://localhost:3000?email=${encodeURIComponent(userEmail)}`);
+//     } else  {
+//       res.redirect(`http://localhost:3000?email=${encodeURIComponent(userEmail)}`);
       
-    }
+//     }
     
-  }
-);
+//   }
+// );
 
-app.get('/auth/facebook',
-  passport.authenticate('facebook', { scope: ['email','profile'] })
-);
+// app.get('/auth/facebook',
+//   passport.authenticate('facebook', { scope: ['email','profile'] })
+// );
 
-console.log('Client ID:', process.env.clientID);
-console.log('Client Secret:', process.env.clientSecret);
+// console.log('Client ID:', process.env.clientID);
+// console.log('Client Secret:', process.env.clientSecret);
 
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', {
-    failureRedirect: 'http://localhost:3000/error' // Redirects if authentication fails
-  }),
-  (req, res) => {
-    const userEmail = req.user.user.email; // Extract the email from req.user
+// app.get('/auth/facebook/callback',
+//   passport.authenticate('facebook', {
+//     failureRedirect: 'http://localhost:3000/error' // Redirects if authentication fails
+//   }),
+//   (req, res) => {
+//     const userEmail = req.user.user.email; // Extract the email from req.user
 
-    if (!userEmail) {
-      // Redirect to an error page if the email is missing
-      return res.redirect('http://localhost:3000/error');
-    }
+//     if (!userEmail) {
+//       // Redirect to an error page if the email is missing
+//       return res.redirect('http://localhost:3000/error');
+//     }
 
-    // Handle redirection based on whether the user is new or returning
-    if (req.user.isNewUser) {
-      res.redirect(`http://localhost:3000/facebook/account?email=${encodeURIComponent(userEmail)}`);
-    } else {
-      res.redirect(`http://localhost:3000?name=${encodeURIComponent(userEmail)}`);
-    }
-  }
-);
+//     // Handle redirection based on whether the user is new or returning
+//     if (req.user.isNewUser) {
+//       res.redirect(`http://localhost:3000/facebook/account?email=${encodeURIComponent(userEmail)}`);
+//     } else {
+//       res.redirect(`http://localhost:3000?name=${encodeURIComponent(userEmail)}`);
+//     }
+//   }
+// );
 const Comment = require('../model/chaptercomments'); // Assuming the model is in the 'models' directory
 
 app.get('/api/load/comment', async (req, res) => {

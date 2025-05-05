@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUsers, faTools, faUser, faExclamationTriangle, faCalendar, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faBox, faUsers, faTools, faUser, faExclamationTriangle, faCalendar, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 
 function Admin() {
   return (
@@ -19,6 +19,10 @@ function Admin() {
         <div className=' text-white font-bold hover:bg-gray-800 p-4'>
           <FontAwesomeIcon  className='ml-16 ' icon={faTools} />
          <Link to="add-services"> <span className='ml-2'>Services</span> </Link> 
+        </div>
+        <div className=' text-white font-bold hover:bg-gray-800 p-4'>
+          <FontAwesomeIcon  className='ml-16 ' icon={faBox} />
+         <Link to="approve-orders"> <span className='ml-2'>Approval Orders</span> </Link> 
         </div>
         <div className='text-white font-bold hover:bg-gray-800 p-4'>
           <FontAwesomeIcon  className='ml-16 ' icon={faUser} />

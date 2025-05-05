@@ -7,7 +7,7 @@ const OrderSchema = new mongoose.Schema({
   money:Number,
   services: [{
   
-    name:String,
+    serviceName:String,
     des:String,
     price:Number, 
     domain:String, // This allows services to contain any object or primitive type

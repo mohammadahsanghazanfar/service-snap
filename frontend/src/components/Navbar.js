@@ -224,21 +224,21 @@ const Navbar = () => {
                           <div className="flex  space-x-4">
                             <img
                               src={item.img}
-                              alt={item.name}
+                              alt={item.serviceName}
                               className="w-12 h-12 object-cover rounded"
                             />
                             <div>
-                              <p className="text-sm font-medium text-gray-800">
-                                {item.name}
+                              <p className="text-md font-bold text-gray-800">
+                                {item.serviceName}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-sm text-gray-500">
                                 {item.des}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-sm font-bold text-gray-800">
-                              ${item.price}
+                              Rs{item.price}
                             </p>
                             <button
                               className="text-xs text-red-500 hover:underline"

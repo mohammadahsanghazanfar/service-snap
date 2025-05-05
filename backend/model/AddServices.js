@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const ServicesSchema = new mongoose.Schema({
   
     field:String,
+    serviceName:String,
     price:Number,
     des:String,
-    img:String,
+    image:String,
+    
   
 });
 

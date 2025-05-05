@@ -30,9 +30,17 @@ router.post('/acceptOrders',control.acceptOrders)
 router.post('/deleteOrders',control.deleteOrders)
 router.post('/pendingOrder',control.pendingOrder)
 router.get('/allUsers',control.allUsers)
+router.get('/allOrders',control.getOrders)
 router.post('/particularUser',control.patUser)
 router.put('/blockUser',control.blockUser1)
+router.post('/api/getService',control.getService)
+router.post('/api/adminApproval',control.adminApproval)
+router.delete('/api/rejectOrder',control.rejectOrder)
+router.post('/api/particularOrder',control.particularOrder)
+
 router.post('/account/externalloginconfirmation', upload.single('cnic'), control.changingData);
+router.post('/api/add/services', upload.single('image'), control.manualService);
+
 
 // router.post('//add', upload.single('image'), control.addSubmission);
 

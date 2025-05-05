@@ -25,6 +25,7 @@ import PendingPage from './pages/PendingPage';
 import AdminPage from './pages/AdminPage';
 import UsersPage from './pages/UsersPage';
 import AddServicesPage from './pages/AddServicesPage';
+import OrdersApprovalPage from './pages/OrdersApprovalPage';
 
 
 
@@ -153,6 +154,7 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminPage />}>
           <Route path="users" element={<UsersPage />} />
           <Route path="add-services" element={<AddServicesPage/>} />
+          <Route path="approve-orders" element={<OrdersApprovalPage/>} />
           {/* Add more nested routes here like services, complaints, etc. */}
         </Route>
       </Routes>

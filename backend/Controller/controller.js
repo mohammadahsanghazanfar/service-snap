@@ -5,8 +5,10 @@ const Userdb = require('../model/user'); // Update the path as needed
 const Commentdb=require('../model/Comments')
 const CommentBoxdb=require('../model/CommentsBox')
 const ticketsDB=require('../model/Tckets')
+const ServiceDB=require('../model/AddServices')
 const Order=require('../model/Orders')
 const OrdersPlaced=require('../model/PlacedOrders')
+const ApproveOrders=require('../model/ApproveOrder')
 
 const BookThread = require('../src/models/BookThread')
 const UtmTag = require('../model/UtmTag');
@@ -58,6 +60,83 @@ exports.forgotPassword = async (req, res) => {
   } 
 };
 
+exports.getOrders=async(req,res)=>{
+   
+  try {
+    // Fetch all orders from the database
+    const orders = await Order.find();  // This gets all orders from the database
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ success: false, message: 'No orders found' });
+    }
+
+    // If you want to flatten the orders (if needed), you can do so here. 
+    // For example, flatten orders with multiple services:
+   
+
+    // Respond with the flattened orders
+    return res.status(200).json({ success: true, orders: orders });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while fetching orders' });
+  }
+};
+   
+  exports.adminApproval=async(req,res)=>{
+        const{username,email,money,serviceNmae,servicedes,address,cell,location}=req.body
+        try {
+          // Save to MongoDB
+          const newApproval = new ApproveOrders({
+            username,
+            email,
+            money,
+            serviceNmae,
+            servicedes,
+            address,
+            cell,
+            location,
+          });
+      
+          await newApproval.save();
+          res.status(201).json({
+            success: true,
+            message: 'Service added successfully',
+            approval: newApproval,
+          });
+        } catch (error) {
+          console.error('Error saving service:', error);
+          res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+        
+  }
+  exports.rejectOrder=async(req,res)=>{
+    const { id } = req.body;
+
+    try {
+      const result = await Order.findByIdAndDelete(id);
+      if (!result) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.status(200).json({ message: "Order deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  }
+  exports.particularOrder=async(req,res)=>{
+       const {mobile}=req.body
+
+       try {
+        const orders = await Order.find({
+          mobile: { $regex: new RegExp(`^${mobile}`, 'i') }
+        });
+         
+        res.status(200).json({ message: "Order find successfully" , orders });
+
+       }
+       catch(err){
+        res.status(500).json({ message: "Server error", error: err.message });
+       }
+  }
 
 exports.resetPassword = async (req, res) => {
               const { email, password } = req.body;
@@ -85,6 +164,60 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+exports.manualService=async(req,res)=>{
+
+
+  console.log('Request Body:', req.body);         // 👈 Logs form fields
+  console.log('Uploaded File:', req.file); 
+
+  const { field, des, price,serviceName } = req.body;
+  const image = req.file;
+
+  if (!field || !des || !price || !image) {
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+
+  try {
+    // Save to MongoDB
+    const newService = new ServiceDB({
+      field,
+      serviceName,
+      des,
+      price: parseFloat(price),
+      image: image.filename,
+    });
+
+    await newService.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Service added successfully',
+      service: newService,
+    });
+  } catch (error) {
+    console.error('Error saving service:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+   exports.getService=async(req,res)=>{
+            const {field}=req.body;
+      try {
+         
+        const services = await ServiceDB.find({ field: field });
+
+        if (services.length === 0) {
+          return res.status(404).json({ success: false, message: 'No services found for this field' });
+        }
+    
+        return res.status(200).json({ success: true, services });
+    
+
+
+      }catch(error){
+        console.error('Error verifying email:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while verifying email.' });
+      }
+   }
 exports.verifyEmail = async (req, res) => {
   try {
     const { token } = req.body;

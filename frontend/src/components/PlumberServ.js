@@ -1,78 +1,42 @@
-import React from 'react'
-import Fan2 from '../images/Fan2.jpg';
-import Motor from '../images/Motor.jpg';
-import LED from '../images/LED.jpg';
-import leak from '../images/leak.jpg';
-import Drain from '../images/Drain.jpg'
-import pipe from '../images/pipe.jpg'
-import water from '../images/water.png'
-import PlumberServComp from './PlumberServComp';
-import toilet from '../images/toilet.webp'
-import shower from '../images/shower.webp'
-
-import Gen from '../images/gen.jpg'
-
-
-
-
+// PlumberServ.js
+import React, { useEffect, useState } from 'react';
+import PlumberServComp from './PlumberServComp'; // Assuming this is another component that will display each service
 
 function PlumberServ() {
-  let servicesArr = [{
-      name: "Leak Detection and Repair",
-      des: 'One Item',
-      price: 500,
-      img: leak, // Assuming Fan1 is the path to your image
-      rating: 3.8
-  },
-  {
-  name: "Drain Cleaning and Unclogging",
-  des: 'One Item',
-  price:1000,
-  img: Drain, // Assuming Fan1 is the path to your image
-  rating: 4.8
-},
-{
-  name: "Pipe Installation and Repair",
-  des: 'One Item',
-  img: pipe, 
-  price:1000,// Assuming Fan1 is the path to your image
-  rating: 1.8
-},
-{
-    name: "Water Heater Services",
-    des: 'One Item',
-    img: water, // Assuming Fan1 is the path to your image
-    rating: 1.8,
-    price:1000,
-  },
-  {
-    name: " Toilet Repair and Installation",
-    des: 'One Item',
-    img: toilet, // Assuming Fan1 is the path to your image
-    rating: 1.8,
-    price:1000,
-  },
-  {
-    name: " Shower and Tub Repair",
-    des: 'One Item',
-    img: shower, // Assuming Fan1 is the path to your image
-    rating: 2.8,
-    price:1000,
-  }
-];
+  const [servicesArr, setServicesArr] = useState([]);
+
+  const requestService = async () => {
+    const response = await fetch('http://localhost:5001/api/getService', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        field: 'Plumber', // Here, 'Plumber' is the field you want to fetch services for
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Fetched services:', data.services); // Debugging to see the services array
+      setServicesArr(data.services); // Update the services array in state
+    } else {
+      console.error('Failed to fetch services');
+    }
+  };
+
+  useEffect(() => {
+    requestService(); // Fetch services on component mount
+  }, []);
 
   return (
-      <div>
-          <div className='font-bold mt-[3%] text-2xl text-center'>Plumbing Services</div>
-
-          <div className='grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4  gap-4 p-[5%] '>
-              {servicesArr.map((service, index) => (
-                <PlumberServComp service={service} index={index}/>
-              ))}
-          </div>
+    <div>
+      <div className='font-bold mt-[3%] text-2xl text-center'>Plumbing Services</div>
+      <div className='grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-[5%]'>
+        {servicesArr.map((service, index) => (
+          <PlumberServComp key={index} service={service} />
+        ))}
       </div>
+    </div>
   );
 }
-
 
 export default PlumberServ;

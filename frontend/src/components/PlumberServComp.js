@@ -1,44 +1,86 @@
-import React,{useState} from "react";
-import { useDispatch } from "react-redux";
+import React,{useState,useEffect} from "react"
+import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../store";
 import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
-function PlumberServComp({ service, index }) {
+function ElecServComp({ service, index }) {
    const [arr,setArr]=useState([])
    const dispatch=useDispatch()
+   const valid = useSelector((state) => state.userData.isAuthenticated);
+   const navigate=useNavigate()
+   const user = useSelector((state) => state.userData.user);
 
-  const addToCart=(e)=>{
-    e.preventDefault();
-     const obj={
-          img:service.img,
-          name:service.name,
-          price:service.price,
-          des:service.des,
-          domain:'Plumber'
-     }
-     arr.push(obj)
-     console.log(arr)
 
-     dispatch(userActions.setItems(obj))
-      notification.success({
-        message:"Success",
-        description:"Item added to cart successfully"
-      })
+
+   //change isauthenticated to false
+
+
+  const addToCart=async()=>{
+    
+
+    if(valid){
+
+         
+      const response = await fetch("http://localhost:5001/api/checkOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+    
+          email: user.email
+         
+        }),
+      });
+
+      const data = await response.json();
+  if(data.success){
+    notification.error({
+      message:"Error",
+      description:"Your order is already placed"
+    })
+    console.log('hey')
+     
+    }
+    else{
+     
+      const obj={
+        img:`http://localhost:5001/uploads/${service.image}`,  
+        serviceName:service.serviceName,
+        price:service.price,
+        des:service.des,
+        domain:'Plumber'
+   }
+   arr.push(obj)
+   console.log(arr)
+
+   dispatch(userActions.setItems(obj))
+    notification.success({
+      message:"Success",
+      description:"Item added to cart successfully"
+    })
+    }
+   
     
   }
+  else{
+    navigate('/login')
+}
 
+
+
+  }
   return (
     <div>
       <div key={index} className=" border-b sm:border p-4 sm:rounded">
         <img
-          src={service.img}
-          alt={service.name}
+          src={`http://localhost:5001/uploads/${service.image}`}
+          alt={service.serviceName}
           className="w-full  h-48 object-contain sm:object-cover rounded"
         />
         <div className="font-semibold text-xl sm:ml-0 ml-[15%]  mt-[5%]">
-          {service.name}
+          {service.serviceName}
         </div>
-        <p className="sm:ml-0 ml-[15%] font-bold"> Price: Rs {service.price}</p>
+        <p className="sm:ml-0 ml-[15%] font-bold"> Price: ${service.price}</p>
         <p className="sm:ml-0 ml-[15%]">{service.des}</p>
        
         <div className="flex items-center  ">
@@ -58,4 +100,4 @@ function PlumberServComp({ service, index }) {
   );
 }
 
-export default PlumberServComp;
+export default ElecServComp;

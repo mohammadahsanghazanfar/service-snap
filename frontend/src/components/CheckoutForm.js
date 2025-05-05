@@ -30,7 +30,7 @@ function CheckoutForm({ showModal, handleClose, user, cartItems, totalPrice }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: user.name,
+          username: user.username,
           email: user.email,
           area: user.area,
           price: totalPrice,

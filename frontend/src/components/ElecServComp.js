@@ -38,8 +38,8 @@ function ElecServComp({ service, index }) {
     else{
      
       const obj={
-        img:service.img,
-        name:service.name,
+        img:`http://localhost:5001/uploads/${service.image}`,
+        serviceName:service.serviceName,
         price:service.price,
         des:service.des,
         domain:'Electrician'
@@ -64,12 +64,12 @@ function ElecServComp({ service, index }) {
     <div>
       <div key={index} className=" border-b sm:border p-4 sm:rounded">
         <img
-          src={service.img}
-          alt={service.name}
+          src={`http://localhost:5001/uploads/${service.image}`}
+          alt={service.serviceName}
           className="w-full  h-48 object-contain sm:object-cover rounded"
         />
         <div className="font-semibold text-xl sm:ml-0 ml-[15%]  mt-[5%]">
-          {service.name}
+          {service.serviceName}
         </div>
         <p className="sm:ml-0 ml-[15%] font-bold"> Price: ${service.price}</p>
         <p className="sm:ml-0 ml-[15%]">{service.des}</p>
